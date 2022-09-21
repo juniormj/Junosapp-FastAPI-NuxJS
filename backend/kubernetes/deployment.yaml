@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: junosapp
+spec:
+  selector:
+    matchLabels:
+      app: junosapp
+  template:
+    metadata:
+      labels:
+        app: junosapp
+    spec:
+      containers:
+      - name: junosapp
+        image: juniormj/junosapp:1.0
+        ports:
+        - containerPort: 15000
+      imagePullSecrets:
+        - name: regcred

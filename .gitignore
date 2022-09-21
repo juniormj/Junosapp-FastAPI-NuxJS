@@ -1,0 +1,14 @@
+# Python
+.env
+__pycache__/
+*.py[cod]
+*$py.class
+
+.vscode
+anotacoes
+
+#NuxJS
+.nuxt
+.eslintcache
+node_modules/
+.cache
