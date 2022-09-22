@@ -49,7 +49,7 @@ export default {
       {
         text: "Radius",
         icon: "mdi-server-network",
-        link: "/admin/device",
+        link: "/admin/radius",
       },
     ],
   }),

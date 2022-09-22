@@ -6,7 +6,6 @@ load_dotenv(dotenv_path="./.env")
 
 
 class Settings:
-    JWT_SECRET = os.getenv("JWT_SECRET")
     IP_TOPSAPP = os.getenv("IP_TOPSAPP")
     ID_TOPSAPP = os.getenv("ID_TOPSAPP")
     USER_TOPSAPP = os.getenv("USER_TOPSAPP")

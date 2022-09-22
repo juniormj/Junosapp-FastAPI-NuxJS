@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     DB_URL: str = setting.SQLALCHEMY_DATABASE_URI
     DBBaseModel = declarative_base()
 
-    JWT_SECRET: str = setting.JWT_SECRET
+    JWT_SECRET: str = "7LwwFARqNBzdY4DGN3wzM-Tb9EsNxFnoP53v0EfcBm4"
     ALGORITHM: str = "HS256"
     # 60 minutos * 24 horas * 7 dias
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7

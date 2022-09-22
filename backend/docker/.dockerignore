@@ -4,6 +4,4 @@ logs
 venv
 migrations
 **/*.pyc
-poetry.lock
-pyproject.toml
 kubernetes/*
