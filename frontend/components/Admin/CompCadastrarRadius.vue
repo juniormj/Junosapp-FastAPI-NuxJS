@@ -42,7 +42,6 @@ export default {
   methods: {
     async enviaForm() {
       const cad = await this.$store.dispatch("erp/setCadRadius", this.form);
-      console.log(cad);
       if (cad) {
         this.$router.push("/admin/radius");
       }

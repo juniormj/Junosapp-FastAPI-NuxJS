@@ -35,9 +35,8 @@ export default {
   methods: {
     async enviaForm() {
       const cad = await this.$store.dispatch("users/setFormUser", this.form);
-      if (Object.keys(cad).length < 2) {
-        await this.$store.dispatch("setUsers");
-        this.$router.push("/admin");
+      if (cad) {
+        this.$router.push("/");
       }
     },
   },
