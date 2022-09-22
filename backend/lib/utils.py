@@ -1,12 +1,17 @@
 import json
 import socket
 import sys
-from typing import List
+from typing import Dict, List
 
 import requests
 from config import setting
 from fastapi import status
 from fastapi.exceptions import HTTPException
+from models.erp_model import ErpModel
+from schemas.erp_schema import ErpSchemaBase
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.future import select
+from sqlalchemy.orm import sessionmaker
 
 requests.packages.urllib3.disable_warnings()
 requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ":HIGH:!DH:!aNULL"
@@ -63,27 +68,37 @@ def scanner_ip(ip, sh_ports_closed=0):
     return open_ports
 
 
+async def get_radius() -> ErpModel:
+    engine = create_async_engine(setting.SQLALCHEMY_DATABASE_URI)
+    async_session = sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
+    async with async_session() as session:
+        async with session.begin():
+            query = select(ErpModel)
+            result = await session.execute(query)
+            return result.scalars().unique().one_or_none()
+
+
 async def get_log() -> dict:
-    topsapp = setting.IP_TOPSAPP
+    erp: Dict[ErpSchemaBase] = await get_radius()
 
     files = {
-        "usuario": (None, setting.USER_TOPSAPP),
-        "senha": (None, setting.PASS_TOPSAPP),
-        "identificador": (None, setting.ID_TOPSAPP),
+        "usuario": (None, erp.login),
+        "senha": (None, erp.senha),
+        "identificador": (None, erp.identificador),
     }
 
-    r = requests.post("https://" + topsapp + ":9910/Login", files=files, verify=False)
+    r = requests.post("https://" + erp.ip + ":9910/Login", files=files, verify=False)
 
     files = {
         "idUsuario": (None, r.json()["id_usuario"]),
         "sessao": (None, r.json()["sessao"]),
-        "identificador": (None, setting.ID_TOPSAPP),
+        "identificador": (None, erp.identificador),
     }
 
-    logs = requests.post(f"https://{topsapp}:9910/ObterLogsRadius", files=files, verify=False)
+    logs = requests.post(f"https://{erp.ip}:9910/ObterLogsRadius", files=files, verify=False)
 
     # faz logoff da API
-    requests.post(f"https://{topsapp}:9910/Logout", files=files, verify=False)
+    requests.post(f"https://{erp.ip}:9910/Logout", files=files, verify=False)
     return json.loads(logs.text)
 
 
@@ -96,53 +111,53 @@ async def get_log_login(login: str) -> dict:
 
 
 async def get_obter_clientes_servicos(login: str) -> dict:
-    topsapp = setting.IP_TOPSAPP
+    erp: Dict[ErpSchemaBase] = await get_radius()
 
     files = {
-        "usuario": (None, setting.USER_TOPSAPP),
-        "senha": (None, setting.PASS_TOPSAPP),
-        "identificador": (None, setting.ID_TOPSAPP),
+        "usuario": (None, erp.login),
+        "senha": (None, erp.senha),
+        "identificador": (None, erp.identificador),
     }
 
-    r = requests.post(f"https://{topsapp}:9910/Login", files=files, verify=False)
+    r = requests.post(f"https://{erp.ip}:9910/Login", files=files, verify=False)
 
     files = {
         "idUsuario": (None, r.json()["id_usuario"]),
         "sessao": (None, r.json()["sessao"]),
-        "identificador": (None, setting.ID_TOPSAPP),
+        "identificador": (None, erp.identificador),
         "usuario": (None, login),
     }
 
-    output = requests.post(f"https://{topsapp}:9910/ObterClientesServicos", files=files, verify=False)
+    output = requests.post(f"https://{erp.ip}:9910/ObterClientesServicos", files=files, verify=False)
 
     # faz logoff da API
-    requests.post(f"https://{topsapp}:9910/Logout", files=files, verify=False)
+    requests.post(f"https://{erp.ip}:9910/Logout", files=files, verify=False)
     return json.loads(output.text)
 
 
 async def get_obter_suporte_cliente(id_cliente: int) -> dict:
-    topsapp = "179.108.49.238"
+    erp: Dict[ErpSchemaBase] = await get_radius()
 
     files = {
-        "usuario": (None, setting.USER_TOPSAPP),
-        "senha": (None, setting.PASS_TOPSAPP),
-        "identificador": (None, setting.ID_TOPSAPP),
+        "usuario": (None, erp.login),
+        "senha": (None, erp.senha),
+        "identificador": (None, erp.identificador),
     }
 
-    r = requests.post(f"https://{topsapp}:9910/Login", files=files, verify=False)
+    r = requests.post(f"https://{erp.ip}:9910/Login", files=files, verify=False)
 
     files = {
         "idUsuario": (None, r.json()["id_usuario"]),
         "sessao": (None, r.json()["sessao"]),
-        "identificador": (None, setting.ID_TOPSAPP),
+        "identificador": (None, erp.identificador),
         "idCliente": (None, id_cliente),
         "ordenarRegra": (None, "1"),
         "ordenarTipo": (None, "1"),
         "status": (None, "1"),
     }
 
-    output = requests.post(f"https://{topsapp}:9910/ObterSuporte", files=files, verify=False)
+    output = requests.post(f"https://{erp.ip}:9910/ObterSuporte", files=files, verify=False)
 
     # faz logoff da API
-    requests.post(f"https://{topsapp}:9910/Logout", files=files, verify=False)
+    requests.post(f"https://{erp.ip}:9910/Logout", files=files, verify=False)
     return json.loads(output.text)
