@@ -6,10 +6,6 @@ load_dotenv(dotenv_path="./.env")
 
 
 class Settings:
-    IP_TOPSAPP = os.getenv("IP_TOPSAPP")
-    ID_TOPSAPP = os.getenv("ID_TOPSAPP")
-    USER_TOPSAPP = os.getenv("USER_TOPSAPP")
-    PASS_TOPSAPP = os.getenv("PASS_TOPSAPP")
     USER_DB = os.getenv("USER_DB")
     PASS_DB = os.getenv("PASS_DB")
     SERV_DB = os.getenv("SERV_DB")

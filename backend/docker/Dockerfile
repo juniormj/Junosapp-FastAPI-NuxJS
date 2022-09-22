@@ -19,6 +19,4 @@ RUN pip install --no-cache-dir --upgrade -r /backend/requirements.txt
 
 COPY . .
 
-RUN rm ./.env ./.env.exemple
-
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "15000"]

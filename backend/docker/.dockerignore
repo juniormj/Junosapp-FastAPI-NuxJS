@@ -1,7 +1,12 @@
 .vscode
-__pycache__
+__pycache__/
 logs
 venv
-migrations
+migrations/
 **/*.pyc
-kubernetes/*
+kubernetes/
+docker
+.dockerignore
+Dockerfile
+.env
+.env.exemple

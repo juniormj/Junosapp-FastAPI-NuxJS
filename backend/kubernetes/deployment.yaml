@@ -13,7 +13,14 @@ spec:
     spec:
       containers:
       - name: junosapp
-        image: juniormj/junosapp:1.0
+        image: juniormj/junosapp:1.1
+        env:
+          - name: USER_DB
+            value: "******"
+          - name: PASS_DB
+            value: "********"
+          - name: SERV_DB
+            value: "xxx.xx.xxx.xx"
         ports:
         - containerPort: 15000
       imagePullSecrets:
