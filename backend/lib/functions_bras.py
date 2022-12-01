@@ -23,6 +23,8 @@ async def get_initial(login: str) -> dict:
             result = await session.execute(query)
             bras = result.scalars().unique().all()
 
+            print(bras)
+
     [ips_olt.append(i.ip) for i in bras]
 
     command = f"show subscribers user-name {login} extensive"

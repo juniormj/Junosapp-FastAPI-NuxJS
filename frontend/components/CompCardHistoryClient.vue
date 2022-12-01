@@ -13,15 +13,15 @@
           </div>
         </v-toolbar>
 
-        <v-list three-line class="mt-n4" v-if="carregado">
+        <v-list v-if="carregado" three-line class="mt-n4">
           <v-dialog v-model="dialogModalOrdemServico" width="500">
             <template #activator="{ on, attrs }">
               <v-list-item-group v-model="id">
                 <v-list-item
                   v-for="(item, i) in historicoOS.dados"
                   :key="i"
-                  v-on="on"
                   v-bind="attrs"
+                  v-on="on"
                   @click="getHistorico(item)"
                 >
                   <v-list-item-content>
@@ -151,6 +151,11 @@ export default {
   computed: {
     ...mapState("apierp", ["clientServico", "historicoOS"]),
   },
+  watch: {
+    historicoOS() {
+      this.carregado = true;
+    },
+  },
 
   async mounted() {},
 
@@ -163,11 +168,6 @@ export default {
         "apierp/setHistoricoOS",
         this.clientServico.id_cliente
       );
-    },
-  },
-  watch: {
-    historicoOS() {
-      this.carregado = true;
     },
   },
 };

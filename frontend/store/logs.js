@@ -3,10 +3,10 @@ export const state = () => ({
 });
 
 export const actions = {
-  setLogs({ commit }) {
+  setLogs({ commit }, token) {
     this.$axios
       .$get("/logs/log", {
-        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        headers: { Authorization: "Bearer " + token },
       })
       .then((resp) => {
         commit("SET_LOGS", resp);

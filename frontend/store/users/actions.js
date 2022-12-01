@@ -3,13 +3,15 @@ export default {
   // ##               METODO CADASTRAR
   // ############################################
   async setFormUser({ dispatch }, form) {
+    const header = {
+      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+    };
     try {
-      await this.$axios.$post("/usuarios/signup", form, {
-        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-      });
+      const resp = await this.$axios.$post("/usuarios/signup", form, header);
       dispatch("alerts/setSuccess", "Usuário cadastrado com sucesso", {
         root: true,
       });
+      return resp;
     } catch ({ response }) {
       if (response.data.detail[0].msg) {
         dispatch("alerts/setError", response.data.detail[0].msg, {

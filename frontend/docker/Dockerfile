@@ -1,4 +1,4 @@
-FROM node:lts as builder
+FROM node:16.13.0 as builder
 
 WORKDIR /frontend
 
@@ -19,11 +19,11 @@ RUN rm -rf node_modules && \
   --non-interactive \
   --production=true
 
-FROM node:lts
+FROM node:16.13.0
 
 WORKDIR /frontend
 
-COPY --from=builder /app  .
+COPY --from=builder /frontend  .
 
 ENV HOST 0.0.0.0
 EXPOSE 3000

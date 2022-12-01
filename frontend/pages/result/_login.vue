@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row v-if="result">
     <!-- MENU ESQUERDO -->
     <v-col cols="12" sm="2">
       <CompCardImg />
@@ -10,7 +10,7 @@
     <v-col cols="12" sm="7">
       <CompTextFilterSearchClient />
 
-      <v-row>
+      <v-row v-if="result">
         <CompCardItem
           titulo="TOTAL DISCADOS"
           icone="fas fa-network-wired"
@@ -72,6 +72,17 @@
         >
           {{ "Desconectar PPPoE" }}
           <v-icon right class="mb-1"> {{ "mdi-power-standby" }} </v-icon>
+        </v-btn>
+
+        <v-btn
+          class="ma-2 white--text"
+          color="grey darken-1"
+          rounded
+          elevation="10"
+          @click="openTerminal"
+        >
+          Terminal
+          <v-icon right class="mb-1"> mdi-console </v-icon>
         </v-btn>
       </v-row>
 
@@ -164,6 +175,15 @@
             </template>
           </v-hover>
         </v-col>
+        <v-dialog v-model="terminal" class="mt-3">
+          <iframe
+            width="800"
+            height="700"
+            :src="src"
+            frameBorder="0"
+            scrolling="no"
+          ></iframe>
+        </v-dialog>
       </v-row>
     </v-col>
     <!-- MENU DIREITO -->
@@ -197,6 +217,8 @@ export default {
   },
   data() {
     return {
+      src: "",
+      terminal: false,
       intervalTraffic: () => {},
       traffic: [],
       downV4: 0,
@@ -236,6 +258,11 @@ export default {
         ip_olt: this.result.ip_olt,
       });
       this.getTraffic();
+    },
+
+    openTerminal() {
+      this.terminal = true;
+      this.src = `http://172.25.1.151:8090/?hostname=${this.result.ip_olt}&username=appscript&password=SnVuMXAzci1jcnlw`;
     },
 
     desconectar() {

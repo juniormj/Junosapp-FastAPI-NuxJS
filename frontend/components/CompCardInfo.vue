@@ -1,6 +1,10 @@
 <template>
   <v-hover v-slot="{ hover }">
-    <v-card class="rounded-xl pa-1" :elevation="hover ? 24 : 10">
+    <v-card
+      v-if="clientServico"
+      class="rounded-xl pa-1"
+      :elevation="hover ? 24 : 10"
+    >
       <v-subheader class="font-weight-bold text-caption">
         {{ clientServico.instalacao_nome }}
       </v-subheader>

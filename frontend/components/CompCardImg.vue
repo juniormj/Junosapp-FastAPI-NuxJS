@@ -23,5 +23,17 @@ export default {
   computed: {
     ...mapState("users", ["currentUser"]),
   },
+  async mounted() {
+    const token = localStorage.getItem("token");
+    if (token) {
+      await this.$store.dispatch("users/viewMe");
+    } else {
+      await this.$store.dispatch(
+        "alerts/setError",
+        "Você não está logado, por favor, faça o login."
+      );
+      return this.$router.push("/login");
+    }
+  },
 };
 </script>

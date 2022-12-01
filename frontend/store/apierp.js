@@ -10,6 +10,7 @@ export const actions = {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
       .then((resp) => {
+        console.log(resp);
         commit("SET_CLIENTE_SERVICO", resp.dados[0]);
       });
   },
